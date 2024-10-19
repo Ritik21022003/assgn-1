@@ -8,14 +8,18 @@ app = Flask(__name__)
 
 @app.route('/htop')
 def htop():
-    name = "Your Full Name"
+    name = "Ritik Sharma"
     
-    username = os.getlogin()
+    username = os.environ.get('USER', 'Unknown')
     
     ist = pytz.timezone('Asia/Kolkata')
     server_time = datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S %Z')
     
-    top_output = subprocess.check_output(['top', '-b', '-n', '1']).decode('utf-8')
+    # Top output
+    try:
+        top_output = subprocess.check_output(['top', '-b', '-n', '1']).decode('utf-8')
+    except subprocess.CalledProcessError:
+        top_output = "Unable to fetch top output"
     
     html_content = f"""
     <html>
